@@ -1,48 +1,18 @@
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import LessonPage from "./pages/LessonPage";
-
-// export default function App() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<LessonPage />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import LessonPage from "./pages/LessonPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/course/python"
-          element={
-            <ProtectedRoute>
-              <LessonPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+      {/* COURSE ROUTE */}
+      <Route path="/course/:lessonId" element={<LessonPage />} />
+    </Routes>
   );
 }

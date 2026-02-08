@@ -1,209 +1,26 @@
-// import { useEffect, useState } from "react";
-// import CodeEditor from "./CodeEditor";
-// import OutputBox from "./OutputBox";
-// import { getPyodide } from "../utils/pyodide";
-
-// export default function LessonStep({ step, onCorrect }) {
-//   const [code, setCode] = useState(step.starterCode);
-//   const [output, setOutput] = useState("");
-//   const [error, setError] = useState("");
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     async function init() {
-//       await getPyodide();
-//       setLoading(false);
-//     }
-//     init();
-//   }, []);
-
-//   const runCode = async () => {
-//     try {
-//       setError("");
-//       setOutput("");
-
-//       const pyodide = await getPyodide();
-
-//       pyodide.runPython(`
-// import sys
-// from io import StringIO
-// sys.stdout = StringIO()
-//       `);
-
-//       pyodide.runPython(code);
-//       const result = pyodide.runPython("sys.stdout.getvalue()");
-//       setOutput(result);
-
-//       if (result.trim() === step.expectedOutput.trim()) {
-//         setTimeout(onCorrect, 800);
-//       }
-//     } catch (err) {
-//       setError(err.toString());
-//     }
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="text-slate-400 text-center mt-20">
-//         Loading Python runtime…
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-      
-//       {/* LEFT — Explanation */}
-//       <div>
-//         <h1 className="text-4xl font-bold mb-6">
-//           {step.title}
-//         </h1>
-
-//         <p className="text-slate-300 text-lg leading-relaxed mb-6">
-//           {step.explanation}
-//         </p>
-
-//         {error && (
-//           <div className="bg-red-900/40 border border-red-700 text-red-300 p-4 rounded-lg text-sm">
-//             {error}
-//           </div>
-//         )}
-
-//         {output.trim() === step.expectedOutput.trim() && (
-//           <div className="mt-4 text-green-400 font-medium">
-//             ✓ Correct! Moving to next step…
-//           </div>
-//         )}
-//       </div>
-
-//       {/* RIGHT — Editor */}
-//       <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-lg p-4">
-//         <CodeEditor code={code} setCode={setCode} />
-
-//         <button
-//           onClick={runCode}
-//           className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md transition font-medium"
-//         >
-//           Run
-//         </button>
-
-//         <OutputBox output={output} />
-//       </div>
-//     </div>
-//   );
-// }
-
-// -------------
-// import { useState } from "react";
-// import CodeEditor from "./CodeEditor";
-// import OutputBox from "./OutputBox";
-// import SolutionToggle from "./SolutionToggle";
-// import { getPyodide } from "../utils/pyodide";
-
-// export default function LessonStep({ step }) {
-//   const [code, setCode] = useState(step.problems[0].starterCode);
-//   const [output, setOutput] = useState("");
-
-//   const runCode = async () => {
-//     const pyodide = await getPyodide();
-
-//     pyodide.runPython(`
-// import sys
-// from io import StringIO
-// sys.stdout = StringIO()
-//     `);
-
-//     pyodide.runPython(code);
-//     setOutput(pyodide.runPython("sys.stdout.getvalue()"));
-//   };
-
-//   return (
-//     <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-
-//       {/* LEFT — CONTENT */}
-//       <div className="space-y-10">
-//         <h1 className="text-4xl font-bold">{step.title}</h1>
-
-//         <p className="text-slate-300 text-lg">
-//           {step.explanation}
-//         </p>
-
-//         {/* THEORY */}
-//         <section>
-//           <h2 className="text-2xl font-semibold mb-3">📌 Key Points</h2>
-//           <ul className="list-disc list-inside text-slate-300 space-y-1">
-//             {step.theory.map((t, i) => (
-//               <li key={i}>{t}</li>
-//             ))}
-//           </ul>
-//         </section>
-
-//         {/* EXAMPLES */}
-//         <section>
-//           <h2 className="text-2xl font-semibold mb-3">💡 Examples</h2>
-//           {step.examples.map((ex, i) => (
-//             <pre
-//               key={i}
-//               className="bg-black text-slate-100 p-4 rounded-lg mb-3"
-//             >
-//               {ex.code}
-//             </pre>
-//           ))}
-//         </section>
-
-//         {/* PRACTICE */}
-//         <section>
-//           <h2 className="text-2xl font-semibold mb-3">🧪 Practice Problems</h2>
-
-//           {step.problems.map((p, i) => (
-//             <div
-//               key={i}
-//               className="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-4"
-//             >
-//               <p className="mb-2 text-slate-200">{p.question}</p>
-//               <SolutionToggle solution={p.solution} />
-//             </div>
-//           ))}
-//         </section>
-//       </div>
-
-//       {/* RIGHT — EDITOR (STICKY) */}
-//       <div className="lg:sticky lg:top-6 h-fit">
-//         <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-lg">
-//           <CodeEditor code={code} setCode={setCode} />
-
-//           <button
-//             onClick={runCode}
-//             className="mt-4 bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium"
-//           >
-//             Run
-//           </button>
-
-//           <OutputBox output={output} />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-// src/components/LessonStep.jsx
-
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CodeEditor from "./CodeEditor";
 import OutputBox from "./OutputBox";
 import SolutionToggle from "./SolutionToggle";
 import { getPyodide } from "../utils/pyodide";
 
 export default function LessonStep({ lesson }) {
-  const [activeProblem, setActiveProblem] = useState(lesson.problems[0]);
-  const [code, setCode] = useState(lesson.problems[0].starterCode);
+  const navigate = useNavigate();
+
+  const [activeProblem, setActiveProblem] = useState(
+    lesson.problems[0]
+  );
+  const [code, setCode] = useState(
+    lesson.problems[0].starterCode
+  );
   const [output, setOutput] = useState("");
 
-  // Restore saved progress
+  const progressKey = `lesson-progress-${lesson.key}`;
+
+  // Restore progress
   useEffect(() => {
-    const saved = localStorage.getItem("datatypes-progress");
+    const saved = localStorage.getItem(progressKey);
     if (saved) {
       const found = lesson.problems.find(
         (p) => p.id === Number(saved)
@@ -213,10 +30,10 @@ export default function LessonStep({ lesson }) {
         setCode(found.starterCode);
       }
     }
-  }, []);
+  }, [lesson, progressKey]);
 
   const isSolved = (id) =>
-    localStorage.getItem("solved-" + id) === "true";
+    localStorage.getItem(`solved-${lesson.key}-${id}`) === "true";
 
   const selectProblem = (problem) => {
     setActiveProblem(problem);
@@ -243,9 +60,30 @@ sys.stdout = StringIO()
       const result = pyodide.runPython("sys.stdout.getvalue()");
       setOutput(result);
 
+      // ✅ Correct solution
       if (result === activeProblem.expectedOutput) {
-        localStorage.setItem("solved-" + activeProblem.id, "true");
-        localStorage.setItem("datatypes-progress", activeProblem.id);
+        localStorage.setItem(
+          `solved-${lesson.key}-${activeProblem.id}`,
+          "true"
+        );
+
+        localStorage.setItem(progressKey, activeProblem.id);
+
+        const isLastProblem =
+          activeProblem.id ===
+          lesson.problems[lesson.problems.length - 1].id;
+
+        // ✅ MOVE TO NEXT LESSON
+        if (isLastProblem && lesson.nextLesson) {
+          localStorage.setItem(
+            "python-current-lesson",
+            lesson.nextLesson
+          );
+
+          setTimeout(() => {
+            navigate(`/course/${lesson.nextLesson}`);
+          }, 800);
+        }
       }
     } catch (err) {
       setOutput(err.toString());
@@ -254,8 +92,7 @@ sys.stdout = StringIO()
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-
-      {/* LEFT SIDE */}
+      {/* LEFT */}
       <div className="space-y-8">
         <h1 className="text-4xl font-bold">{lesson.title}</h1>
         <p className="text-slate-300">{lesson.explanation}</p>
@@ -304,7 +141,7 @@ sys.stdout = StringIO()
         })}
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div className="lg:sticky lg:top-6 h-fit">
         <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
           <CodeEditor code={code} setCode={setCode} />

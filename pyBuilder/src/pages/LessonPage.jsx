@@ -1,33 +1,46 @@
-// import { useState } from "react";
-// import LessonStep from "../components/LessonStep";
-// import stringLessons from "../data/dataTypesLessons";
-
-// export default function LessonPage() {
-//   const [currentStep, setCurrentStep] = useState(0);
-
-//   const handleCorrect = () => {
-//     setCurrentStep((prev) => prev + 1);
-//   };
-
-//   if (currentStep >= stringLessons.length) {
-//     return (
-//       <div className="text-center mt-20 text-green-400 text-2xl">
-//         🎉 Strings lesson completed!
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <LessonStep
-//       step={stringLessons[currentStep]}
-//       onCorrect={handleCorrect}
-//     />
-//   );
-// }
-
+import { useParams, useNavigate } from "react-router-dom";
+import AppLayout from "../layouts/AppLayout";
 import LessonStep from "../components/LessonStep";
+
 import { datatypesLesson } from "../data/dataTypeLessons";
+import { conditionalsLesson } from "../data/conditionalsLesson";
+import { loopsLesson } from "../data/loopsLesson";
+
+const lessonMap = {
+  datatypes: datatypesLesson,
+  conditionals: conditionalsLesson,
+  loops: loopsLesson,
+};
+
+const lessonOrder = ["datatypes", "conditionals", "loops"];
 
 export default function LessonPage() {
-  return <LessonStep lesson={datatypesLesson} />;
+  const { lessonId } = useParams();
+  const navigate = useNavigate();
+
+  const lesson = lessonMap[lessonId];
+
+  if (!lesson) {
+    navigate("/course/datatypes");
+    return null;
+  }
+
+  const goToNextLesson = () => {
+    const index = lessonOrder.indexOf(lessonId);
+    const next = lessonOrder[index + 1];
+    if (next) {
+      navigate(`/course/${next}`);
+    }
+  };
+
+  return (
+    <AppLayout>
+      <div className="px-8 py-10">
+        <LessonStep
+          lesson={lesson}
+          onLessonComplete={goToNextLesson}
+        />
+      </div>
+    </AppLayout>
+  );
 }
